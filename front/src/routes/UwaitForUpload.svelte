@@ -1,0 +1,17 @@
+<script>
+	pc.onnegotiationneeded = ev => {
+  pc.createOffer()
+  .then(offer => return pc.setLocalDescription(offer))
+  .then(() => sendSignalingMessage({
+    type: "video-offer",
+    sdp: pc.localDescription
+  }))
+  .catch(err => {
+    /* handle error */
+  );
+};
+
+</script>
+
+<main>
+</main>
