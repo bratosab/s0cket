@@ -6,7 +6,7 @@ import {push} from 'svelte-spa-router'
 	<h1>s0cket!</h1>
 	<div class="container mx-auto">
 		<button on:click|once={()=> push("/fileUpload")}>Initiate a session</button>
-		<button on:click|once={()=> push("/fileDownload")}>Initiate download</button>
+		<button on:click|once={()=> push("/waiting/receive")}>Initiate download</button>
 	</div>
 </main>
 

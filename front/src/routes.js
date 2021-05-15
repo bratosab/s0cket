@@ -1,9 +1,13 @@
 import Home from './routes/Home.svelte';
 import fileUpload from './routes/FileUpload.svelte';
-import notFound from './routes/NotFound.svelte';
+import NotFound from './routes/NotFound.svelte';
+import WaitReceive from './routes/UwaitForDownload.svelte';
+import WaitUpload from './routes/UwaitForUpload.svelte';
 
 export default{
 	'/':Home,
 	'/fileUpload':fileUpload,
-	'*': notFound //catchall
+	'/waiting/receive': WaitReceive,
+	'/waiting/send': WaitUpload,
+	'*': NotFound //catchall
 }
