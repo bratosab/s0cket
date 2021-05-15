@@ -31,25 +31,52 @@ wss.on("listening", () => {
 wss.on("connection", (ws, req) => {
 
 	ws.on("message", (msg) => {
-		console.info("sessionPublish");
-		console.log(JSON.parse(msg));
+		let data = JSON.parse(msg);
+		console.log(data.type);
+		
+		switch(data.type){
 
-		availSessions[msg.token] = {
-			'ip': req.socket.remoteAddress,
-			'sdp': msg.sdp
-		};
+			case "publish": //Sender session publication
+				console.log("ok")
+				console.log(`Session Published: ${data.token}`);
+				availSessions[data.token]={
+					'ip':ws.remoteAddress,
+					'sdp': data.sdp,
+					'ws': ws //Sender ws
+				};
+				break;
+
+			case "request": //Receiver session request
+				if(availSessions[data.token]){
+					console.debug(`Client connection to session ${data.token}`);
+					ws.emit("remoteDesc", JSON.stringify(availSessions[data.token].sdp));
+				}
+				else{
+					console.log(`session ${data.token} doesn't exist, discarding`);
+					ws.emit("requestError", "Requested session doesn't exist");
+				}
+				break;
+			
+ 			case "iceExchange":
+				if(data.fromSender){ //Sender ICE -> receiver
+					console.log("fromSender");
+					availSessions[data.token].senderIceCandidate=data.candidate
+				} else {
+					console.log("fromRcv");
+					availSessions[data.token].ws.emit("iceExchange", JSON.stringify(data.candidate));
+				}
+				break;
+
+				case "rcvDescAnswer":
+					console.log("rcvDescAnswer");
+					availSessions[data.token].ws.emit("rcvDescAnswer", data.answer);
+					break;
+ 		}
+		
 	});
 
 	ws.on("close", (ws) => {
 		console.log('Connection with client lost.');
-	});
-
-
-	ws.on("publish", (ws, req) => {
-		let data = JSON.parse(msg.data)
-		console.log("sessionPublish");
-		console.log(data);
-		availSessions["TOKEN"] = req.socket.remoteAddress;
 	});
 
 	console.log(`Current clients: ${wss.clients.size}`)

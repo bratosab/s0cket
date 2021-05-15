@@ -1,6 +1,6 @@
 # s0cket
 
-[unstarted] s0cket aims to be a p2p file transfer solution letting users share files of any size directly between each other.
+**s0cket** aims to be a p2p file transfer solution letting users share files of any size directly between each other.
 
 
 ## Contributing
