@@ -23,8 +23,17 @@
 			}));
 		});
 
-		socket.addEventListener("rcvDescAnswer", async (e) => {
-			await rpc.setRemoteDescription(e);
+		socket.addEventListener("message", async (e) => {
+			console.debug(e);
+			let data = JSON.parse(e.data);
+				
+			switch(data.type){
+				case "rcvDescAnswer":
+					console.debug("Setting remote SDP");
+					await rpc.setRemoteDescription(data.sdp);
+					break;
+			}
+			
 		});
 
 		socket.onerror=(e)=>{
