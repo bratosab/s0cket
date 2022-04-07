@@ -12,7 +12,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env: 
-      working-directort: ./front
+      working-directory: ./front
     strategy:
       matrix:
         node-version: [12.x, 14.x, 16.x]
@@ -25,5 +25,10 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm ci
-    - run: npm run build
+        cache-dependency-path: front/package-lock.json
+    - name: install depds
+      run: npm i
+      working-directory: ${{env.working-directory}}
+    - name: build front
+      run: npm run build
+      working-directory: ${{env.working-directory}}
